@@ -9,20 +9,28 @@ from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.tokenize import RegexpTokenizer
 from nltk.stem.wordnet import WordNetLemmatizer
+#Busqueda de diferencias entre palabras.
+from jiwer import wer
 #Desargar lista de stopwords.
 nltk.download('stopwords')
 nltk.download('wordnet')
 
 #Definiciones de constantes.
+#Caracteristicas.
+caractsBuscar = ['dulce','amargo','burbujas']
 #Sinonimos.
 sinonimosDulce = ['dulce','dulzón', 'azucarado', 'acaramelado', 'dulcificado','dulzor']
 sinonimosAmargo = ['amargo', 'agrio', 'aspero','amargor','agriedad','amargura']
-sinonimosBurbujas = ['burbujas', 'burbujeo', 'efervescencia', 'espuma', 'efervescente', 'burbujeo', 'burbujear']
+sinonimosBurbujas = ['burbujas', 'burbujeo', 'efervescencia', 'espuma', 'efervescente', 'burbujeo', 'burbujear','gas']
+#Umbral de modificacion de palabras
+umbralDistancia = 4
 #Lista de stop words en espanol. Util para elminaras del texto original.
 stopWords = set(stopwords.words("spanish"))
 
+
 #Paso de texto a formato pandas.
 def pasoPanda(texto):
+	#Funcion que pase el texto a formato Pandas. Solo para preproesar.
     output = pd.DataFrame([texto],columns = ['Texto'], index = [1])
     return output
 
@@ -88,6 +96,29 @@ def homologarSinonimos(texto):
     texto = homologarSinonimosUnaPalabra(texto,sinonimosBurbujas)
     return texto
 
+#Cambio de palabras a la palabra mas cercana dentro de las caracteristicas
+def reemplazoPalabraCercana(caracteristica,texto,umbral = 3):
+	#Funcion que busque las diferencias entre palabras
+	#Se utiliza como metrica la distancia de Levenshtein.
+
+	#Recorrer texto buscando
+	count = 0
+	for palabra in texto:
+		#Calcular la distancia.
+		distancia = nltk.edit_distance(caracteristica,palabra)
+		#Ver si la distancia se ubica bajo el umbral.
+		if (distancia <= umbral)
+			texto[count] = caracteristica
+		count = count + 1
+	return texto
+
+def reemplazoPalabrasCercanas(caracteristicas,texto,umbral = 3):
+	#Funcion que realice el reemplazo de todas las palabras del vector de caractericas.
+	for caract in caracteristicas:
+		texto = reemplazoPalabraCercana(caract,texto,umbral)
+	return texto
+
+
 #Funcion de preprocesamiento.
 def preprocesar(texto):
     #Paso a texto pandas.
@@ -98,5 +129,8 @@ def preprocesar(texto):
     text = text2int (text)
     #Quitar sinonimos
     text = homologarSinonimos(text)
+    #Cambiar palabras cercanas a las caracteristicas.
+    reemplazoPalabrasCercanas(caractsBuscar,text,umbralDistancia)
     return text
+
 
