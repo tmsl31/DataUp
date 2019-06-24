@@ -7,3 +7,5 @@ Dependencias:
   * SpeechRecognition
   * NLKT
   * matplotlib.pyplot
+  * jiwer
+  * PyAudio
