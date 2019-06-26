@@ -14,6 +14,7 @@ from jiwer import wer
 #Desargar lista de stopwords.
 nltk.download('stopwords')
 nltk.download('wordnet')
+import re
 
 #Definiciones de constantes.
 #Caracteristicas.
@@ -107,7 +108,7 @@ def reemplazoPalabraCercana(caracteristica,texto,umbral = 3):
 		#Calcular la distancia.
 		distancia = nltk.edit_distance(caracteristica,palabra)
 		#Ver si la distancia se ubica bajo el umbral.
-		if (distancia <= umbral)
+		if (distancia <= umbral):
 			texto[count] = caracteristica
 		count = count + 1
 	return texto

@@ -1,6 +1,7 @@
 #Modulo de visualizacion.
 #Imports.
 import matplotlib.pyplot as plt
+import numpy as np
 
 #Funcion para agregar el valor de la calificacion al tipo de calificacion
 #(solo para visualizarlo mas facilmente)

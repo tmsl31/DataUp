@@ -1,5 +1,9 @@
 #MODULO DE BUSQUEDA.
 
+#Imports.
+import numpy as np
+import pandas as pd
+
 def stringNumerico (word):
     #Funcion que verifica si un string es numerico
     try:
