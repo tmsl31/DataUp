@@ -26,6 +26,7 @@ def buscarDespues(indiceCar,vecCaracteristicas,text,maxVentana):
     cond = False;
     calificacion = 'NS/NR'
     #Valores de indice.
+    print(indiceCar)
     valoresIndice = np.arange(indiceCar+1,indiceCar+maxVentana)
     #Largo del texto.
     largoTexto = text.shape[0]
@@ -57,7 +58,7 @@ def buscarAntes(indiceCar,vecCaracteristicas,text,maxVentana):
     indiceFinal = indiceCar-maxVentana
     valoresIndice = np.arange(indiceCar-1,indiceFinal, -1)
     #Ciclo de busqueda
-    for indice in valoresIndice:
+    for indice in valoresIndice(0):
         if (indice < 0):
             #Caso en que el indice llegue a valores negativos.
             break

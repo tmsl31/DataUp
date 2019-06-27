@@ -4,16 +4,17 @@
 
 #Imports.
 from voz import *
-from  preProcesamiento import *
+from preProcesamiento import *
 from busqueda import *
 from visualizacion import *
 
-def obtenerGrafico(tiempoEspera = 10):
+def obtenerGrafico(tiempoEspera = 30):
     #Captura del audio
-    texto = voz.capturaAudio(tiempoEspera)
+    texto = capturaAudio(tiempoEspera)
     #Preprocesar Texto
-    #texto = "El dulce estaba 1, el amargo un 8 y las burbujas un 10"
+    #texto = "El dulce estaba uno, el amargo un 8 y las burbujas un 10"
     text = preprocesar(texto)
+    print(text)
     #Buscar caracteristicas y calificaciones.
     caracts,califs = buscarCalificaciones(['dulce','amargo','burbujas'],text,maxVentana = 3)
     #Grafico.

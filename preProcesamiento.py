@@ -20,7 +20,7 @@ import re
 #Caracteristicas.
 caractsBuscar = ['dulce','amargo','burbujas']
 #Sinonimos.
-sinonimosDulce = ['dulce','dulzón', 'azucarado', 'acaramelado', 'dulcificado','dulzor']
+sinonimosDulce = ['dulce','dulzón', 'endulces' , 'azucarado', 'acaramelado', 'dulcificado','dulzor']
 sinonimosAmargo = ['amargo', 'agrio', 'aspero','amargor','agriedad','amargura']
 sinonimosBurbujas = ['burbujas', 'burbujeo', 'efervescencia', 'espuma', 'efervescente', 'burbujeo', 'burbujear','gas']
 #Umbral de modificacion de palabras
@@ -31,6 +31,7 @@ stopWords = set(stopwords.words("spanish"))
 
 #Paso de texto a formato pandas.
 def pasoPanda(texto):
+    print('Paso a pandas')
 	#Funcion que pase el texto a formato Pandas. Solo para preproesar.
     output = pd.DataFrame([texto],columns = ['Texto'], index = [1])
     return output
@@ -47,7 +48,8 @@ def limpieza(textoPandas,stopWords, deleteStopWords = 1, lemanizar= 0):
     #Convertir a vector de palabras.
     text = text.split()
     #Eliminar stopWords
-    text = [word for word in text if not word in stopWords]
+    #text = [word for word in text if not word in stopWords]
+    text = [word for word in text if (1==1)]
     #Decidir si lemanizar o no
     if lemanizar == 1:
         lem = WordNetLemmatizer()
@@ -74,8 +76,7 @@ def text2int (textnum, numwords={}):
             count += 1
         else:
             copiaTextNum[count] = str(diccionario[word]);
-            count += 1
-
+            count += 1            
     return copiaTextNum
 
 #Funciones para trabajos sobre sinonimos.
@@ -113,11 +114,29 @@ def reemplazoPalabraCercana(caracteristica,texto,umbral = 3):
 		count = count + 1
 	return texto
 
-def reemplazoPalabrasCercanas(caracteristicas,texto,umbral = 3):
+def reemplazoPalabrasCercanas(caracteristicas,texto,umbral = 2):
 	#Funcion que realice el reemplazo de todas las palabras del vector de caractericas.
-	for caract in caracteristicas:
-		texto = reemplazoPalabraCercana(caract,texto,umbral)
-	return texto
+
+    #Indices de las caracteristicas.
+    estar = np.array([])
+    for caract in caracteristicas:
+        indice = np.where(texto == caract);
+        if (len(indice) == 0):
+            estar = np.append(estar,False)
+        else:
+            estar = np.append(estar,True)
+
+    # Mantener las que faltan
+    faltan = np.array([])
+    count = 0
+    for caract in caracteristicas:
+        if (estar[count] == False):
+            faltan = np.append(faltan,caract)
+        count += 1
+
+    for caract in faltan:
+        texto = reemplazoPalabraCercana(caract,texto,umbral)
+    return texto
 
 
 #Funcion de preprocesamiento.
