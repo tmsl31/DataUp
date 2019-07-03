@@ -23,8 +23,6 @@ caractsBuscar = ['dulce','amargo','burbujas']
 sinonimosDulce = ['dulce','dulzón', 'endulces' , 'azucarado', 'acaramelado', 'dulcificado','dulzor']
 sinonimosAmargo = ['amargo', 'agrio', 'aspero','amargor','agriedad','amargura']
 sinonimosBurbujas = ['burbujas', 'burbujeo', 'efervescencia', 'espuma', 'efervescente', 'burbujeo', 'burbujear','gas']
-#Umbral de modificacion de palabras
-umbralDistancia = 4
 #Lista de stop words en espanol. Util para elminaras del texto original.
 stopWords = set(stopwords.words("spanish"))
 
@@ -99,43 +97,53 @@ def homologarSinonimos(texto):
     return texto
 
 #Cambio de palabras a la palabra mas cercana dentro de las caracteristicas
-def reemplazoPalabraCercana(caracteristica,texto,umbral = 3):
+def reemplazoPalabraCercana(caracteristica,texto):
 	#Funcion que busque las diferencias entre palabras
 	#Se utiliza como metrica la distancia de Levenshtein.
 
-	#Recorrer texto buscando
-	count = 0
-	for palabra in texto:
-		#Calcular la distancia.
-		distancia = nltk.edit_distance(caracteristica,palabra)
-		#Ver si la distancia se ubica bajo el umbral.
-		if (distancia <= umbral):
-			texto[count] = caracteristica
-		count = count + 1
-	return texto
+    #Vector que almacene la distancia de las palabras de la frase.
+    distancias = np.array([])
+    #Recorrer texto buscando
+    count = 0
+    for palabra in texto:
+        #Calcular la distancia.
+        distancia = nltk.edit_distance(caracteristica,palabra)
+        #Anexar la distancias.
+        distancias = np.append(distancias,distancia);
+    #Buscar la posición de la minima distancia.
+    argminDistancia = np.argmin(distancias)
+    #Reemplazar esta palabra por la caracteristica que falta.
+    print(argminDistancia)
+    texto[argminDistancia] = caracteristica;
+    return texto
 
-def reemplazoPalabrasCercanas(caracteristicas,texto,umbral = 2):
+def reemplazoPalabrasCercanas(caracteristicas,texto):
 	#Funcion que realice el reemplazo de todas las palabras del vector de caractericas.
 
     #Indices de las caracteristicas.
     estar = np.array([])
     for caract in caracteristicas:
-        indice = np.where(texto == caract);
-        if (len(indice) == 0):
-            estar = np.append(estar,False)
+        #Indices de ocurrencia.
+        indice = np.where(texto == caract)
+        #Obtener el largo de los indices.
+        nIndices = np.shape(indice)[1]
+        if (nIndices == 0):
+            #Caso en que la caracteristica no esta en la frase.
+            estar = np.append(estar,0)
+            #Caso en que la caracteristica esta en la frase.
         else:
-            estar = np.append(estar,True)
-
-    # Mantener las que faltan
+            estar = np.append(estar,1)
+    #Obtener las caracteristicas que faltan en la frase analizada.
     faltan = np.array([])
     count = 0
+    # Mantener las que faltan
     for caract in caracteristicas:
-        if (estar[count] == False):
+        if (estar[count] == 0):
             faltan = np.append(faltan,caract)
         count += 1
-
+    # Buscar el reemplazo para las palabras que faltan.
     for caract in faltan:
-        texto = reemplazoPalabraCercana(caract,texto,umbral)
+        texto = reemplazoPalabraCercana(caract,texto)
     return texto
 
 
@@ -145,12 +153,15 @@ def preprocesar(texto):
     textoPandas = pasoPanda(texto)
     #Pre procesar.
     text = limpieza(textoPandas,stopWords)
+    #paso a numpy
+    text = np.array(text)
+    text = text.astype('U256') 
     #Paso de numeros a enteros.
     text = text2int (text)
     #Quitar sinonimos
     text = homologarSinonimos(text)
     #Cambiar palabras cercanas a las caracteristicas.
-    reemplazoPalabrasCercanas(caractsBuscar,text,umbralDistancia)
+    reemplazoPalabrasCercanas(caractsBuscar,text)
     return text
 
 
