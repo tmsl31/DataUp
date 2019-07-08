@@ -10,7 +10,7 @@ from visualizacion import *
 
 def obtenerGrafico(tiempoEspera = 30):
     #Captura del audio
-    #texto = capturaAudio(tiempoEspera)
+    texto = capturaAudio(tiempoEspera)
     #Preprocesar Texto
     #texto = "El dulce estaba uno, el amargo un 8 y las burbujas un 10"
     #texto = "El dulce estaba uno, el amargo un 8 y las brujas un 10"
