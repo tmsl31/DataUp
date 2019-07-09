@@ -9,15 +9,30 @@ from busqueda import *
 from visualizacion import *
 
 def obtenerGrafico(tiempoEspera = 30):
+    
     #Captura del audio
-    texto = capturaAudio(tiempoEspera)
-    #Preprocesar Texto
-    #texto = "El dulce estaba uno, el amargo un 8 y las burbujas un 10"
-    #texto = "El dulce estaba uno, el amargo un 8 y las brujas un 10"
-    text = preprocesar(texto)
-    print(text)
+    try:
+        texto = capturaAudio(tiempoEspera)
+    except:
+        print("Error en capturaAudio")
+        return
+    #Preprocesar Texto    
+    try:
+        text = preprocesar(texto)
+    except:
+        print("Error en text")
+        return
     #Buscar caracteristicas y calificaciones.
-    caracts,califs = buscarCalificaciones(['dulce','amargo','burbujas'],text,maxVentana = 3)
+    try:
+        caracts, califs = buscarCalificaciones(['dulce','amargo','burbujas'],text,maxVentana = 3)
+    except:
+        print("Error en buscarCalificaciones")
+        return
     #Grafico.
-    visualizacion(caracts,califs)
-
+    try:
+        visualizacion(caracts,califs)   
+    except:
+        print("Error en visualización")
+        return
+    
+    return califs
