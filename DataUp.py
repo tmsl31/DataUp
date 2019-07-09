@@ -28,13 +28,25 @@ def procesarAudio(tiempoEspera = 30):
     except:
         print("Error en buscarCalificaciones")
         return
-    #Grafico.
-#    try:
-#        visualizacion(caracts,califs)   
-#    except:
-#        print("Error en visualización")
-#        return
     
     return caracts, califs
 
+def procesarAudioTest(tiempoEspera = 30):
+    
+    #Audio de prueba 
+    texto = "dulce 1; amargo 3; gas 8"
+    #Preprocesar Texto    
+    try:
+        text = preprocesar(texto)
+    except:
+        print("Error en text")
+        return
+    #Buscar caracteristicas y calificaciones.
+    try:
+        caracts, califs = buscarCalificaciones(['dulce','amargo','burbujas'],text,maxVentana = 3)
+    except:
+        print("Error en buscarCalificaciones")
+        return
+    
+    return caracts, califs
 
