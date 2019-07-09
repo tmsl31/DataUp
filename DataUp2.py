@@ -1,3 +1,5 @@
+#Dataup Final.
+
 #Interfaz del proyecto DataUp.
 
 # Imports.
@@ -17,13 +19,33 @@ root = Tk()
 root.config(bg="lightblue") 
 root.wm_title("DataUp")
 
+#Funciones globales.
+def crearMatriz(caract):
+    n = len(caract)
+    Mat = np.zeros((1, n))
+    return Mat
+
+def almacenar(vec, Mat): 
+    Mat = np.vstack((Mat,vec))
+    return Mat
+
+def generarCSV(M,directorio):
+	B = pd.DataFrame(M)
+	B.to_csv(directorio,header=None,sep=';')
+
+#Variables globales.
 #Valor del tiempo de grabacion (default =30)
 tiempoGrab = 30;
 #Caracteristicas.
 caracteristicas = ['dulce','amargo','burbuja'];
 #Calificaciones.
 calificaciones = [0.,1.,2.];
+#
 fig_photo = 0;
+#Crear la matriz.
+matrizDatos = crearMatriz(caracteristicas)
+#directorio PC.
+directorio = "C:/Users/tlara/OneDrive/Documentos/GitHub/DataUp/DataUpDB.csv"
 
 #Definicion de funciones a utilizar en la interfaz.
 def obtenerTiempo():
@@ -37,11 +59,12 @@ def grabacion(tiempoGrab):
     #Funcion que realiza la grabacion.
     #Obtener el valor del tiempo de grabacion.
     #Llamar a visualizar
-    global calificaciones
+    global calificaciones, matrizDatos
     try:
-        caracteristicas2, calificaciones2 = procesarAudioTest(tiempoEspera = tiempoGrab)
-        calificaciones = calificaciones2
-        print(calificaciones)
+    	#Procesar audio.
+        caracteristicas2, calificaciones = procesarAudioTest(tiempoEspera = tiempoGrab)
+        #Agregar datos a la matriz.
+        matrizDatos = almacenar(calificaciones,matrizDatos);
     except:
         print('Error en la grabacion. Reintentar')
     print('Lista la conversion')
@@ -78,22 +101,29 @@ def matplotCanvas(caracteristicas,calificaciones):
     canvas.get_tk_widget().pack()
 
 #Interfaz.
+#Nombre de dataup.
+NombreApp = Label(root, text="Data Up", font=('Helvetica', 18, "bold"))
+NombreApp.pack(side = TOP, )
 #Etiqueta de ingreso de datos.
 etiquetaIngreso = Label(root, text='Tiempo de grabación')
-etiquetaIngreso.place(x=50, y=50)
+etiquetaIngreso.pack(side = TOP)
 #Ventana de ingreso de texto
 tiempoIngresar = Entry()
-tiempoIngresar.place(x=170, y=50)
+tiempoIngresar.pack(side = TOP)
 #Boton de set tiempo.
-botonSet = Button(root, text='Set', command =lambda: obtenerTiempo(tiempoGrab))
-botonSet.place(x = 300, y = 48)
+botonSet = Button(root, text='Set', command =lambda: obtenerTiempo())
+botonSet.pack(side = TOP)
 #Boton de grabar.
-fotoMic= PhotoImage(file=r"C:\Users\tlara\OneDrive\Documentos\GitHub\DataUp\microphone.png")
+fotoMic= PhotoImage(file=r"C:/Users/tlara/OneDrive/Documentos/GitHub/DataUp/microphone.png")
 fotoMic2 = fotoMic.subsample(5,5)
 botonGrabar = Button(root, text = 'Grabar!', image = fotoMic2, compound = LEFT, command =lambda: grabacion(tiempoGrab))
-botonGrabar.place(x=160,y=100)
+botonGrabar.pack(side = TOP)
 #Boton de display del grafico.
 botonGrafico = Button(root, text = 'Mostrar Grafico', compound = LEFT, command =lambda: matplotCanvas(caracteristicas,calificaciones))
-botonGrafico.place(x=160,y=200)
+botonGrafico.pack(side = TOP)
+#Boton de almacenamiento de datos.
+botonCSV = Button(root, text = 'GeneraCSV', compound = LEFT, command =lambda: generarCSV(matrizDatos,directorio))
+botonCSV.pack(side = TOP)
+
 
 root.mainloop()
