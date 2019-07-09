@@ -8,7 +8,7 @@ from preProcesamiento import *
 from busqueda import *
 from visualizacion import *
 
-def obtenerGrafico(tiempoEspera = 30):
+def procesarAudio(tiempoEspera = 30):
     
     #Captura del audio
     try:
@@ -29,10 +29,12 @@ def obtenerGrafico(tiempoEspera = 30):
         print("Error en buscarCalificaciones")
         return
     #Grafico.
-    try:
-        visualizacion(caracts,califs)   
-    except:
-        print("Error en visualización")
-        return
+#    try:
+#        visualizacion(caracts,califs)   
+#    except:
+#        print("Error en visualización")
+#        return
     
-    return califs
+    return caracts, califs
+
+

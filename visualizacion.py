@@ -2,6 +2,9 @@
 #Imports.
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.backends.tkagg as tkagg
+from matplotlib.backends.backend_agg import FigureCanvasAgg
+import matplotlib as mpl
 
 #Funcion para agregar el valor de la calificacion al tipo de calificacion
 #(solo para visualizarlo mas facilmente)
@@ -43,3 +46,26 @@ def visualizacion(caracteristicas, calificaciones):
     #Titulo.
     ax.set_title("Resultados encuesta")
     plt.show()
+
+def visualizacion2(caracteristicas,calificaciones):
+    #Visualizacion del grafico de radar.
+    AttNo = len(caracteristicas)
+    #Creacion del grafico.
+    ax = plt.subplot(111, polar = True)
+    #Definicion de los angulos.
+    angles = [n / float(AttNo) * 2 * np.pi for n in range(AttNo)]
+    angles += angles [:1]
+    #
+    calificaciones = np.append(calificaciones,calificaciones[:1])
+    #Agregar los atributos al grafico.
+    #Agregar valor al atributo.
+    car = agregarValor(caracteristicas,calificaciones)
+    plt.xticks(angles,car)
+    #
+    ax.plot(angles,calificaciones,'o-')
+    #Fill in the area plotted in the last line
+    ax.fill(angles, calificaciones, 'teal', alpha=0.1)
+    #Titulo.
+    ax.set_title("Resultados encuesta")
+    #Guardar figura.
+    plt.savefig('grafico.png')
