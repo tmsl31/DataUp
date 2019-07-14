@@ -62,7 +62,7 @@ def grabacion(tiempoGrab):
     global calificaciones, matrizDatos
     try:
     	#Procesar audio.
-        caracteristicas2, calificaciones = procesarAudioTest(tiempoEspera = tiempoGrab)
+        caracteristicas2, calificaciones = procesarAudio(tiempoEspera = tiempoGrab)
         #Agregar datos a la matriz.
         matrizDatos = almacenar(calificaciones,matrizDatos);
     except:
